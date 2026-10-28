@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện Tập Bài 24: Công Suất & Hiệu Suất - Vật Lí 10</title>
+    <!-- Tích hợp KaTeX để hiển thị công thức toán học và kí hiệu vectơ chuẩn xác -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding-bottom: 70px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0f172a, #0284c7);
+            color: white;
+            padding: 18px 16px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        header h1 {
+            font-size: 1.35rem;
+            margin-bottom: 4px;
+            letter-spacing: 0.3px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.92;
+        }
+
+        .top-controls {
+            max-width: 920px;
+            margin: 16px auto;
+            padding: 0 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .level-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .level-btn {
+            padding: 10px 16px;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.92rem;
+        }
+
+        .level-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.28);
+        }
+
+        .level-btn.locked {
+            border-color: #cbd5e1;
+            background: #e2e8f0;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        .sound-btn {
+            padding: 9px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .status-banner {
+            max-width: 920px;
+            margin: 0 auto 16px;
+            padding: 0 16px;
+        }
+
+        .status-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        .stars-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            color: #b45309;
+            background: var(--warning-bg);
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid #fde68a;
+        }
+
+        .star {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .star.earned {
+            color: #f59e0b;
+            transform: scale(1.2);
+        }
+
+        .score-counter {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.02rem;
+            background: #e0f2fe;
+            padding: 6px 14px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .question-card {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 18px;
+            border: 1px solid var(--border);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .q-badge {
+            background: #e0f2fe;
+            color: var(--primary-dark);
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .q-topic {
+            font-size: 0.82rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .q-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: #0f172a;
+        }
+
+        .svg-container {
+            background: #f8fafc;
+            border: 1px dashed #94a3b8;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 640px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            text-align: left;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            font-size: 0.96rem;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #7dd3fc;
+            background: #f0f9ff;
+        }
+
+        .option-label {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #334155;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.85rem;
+        }
+
+        .option-btn.correct {
+            border-color: var(--success);
+            background: var(--success-bg);
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        .option-btn.correct .option-label {
+            background: var(--success);
+            color: white;
+        }
+
+        .option-btn.wrong {
+            border-color: var(--danger);
+            background: var(--danger-bg);
+            color: #991b1b;
+        }
+
+        .option-btn.wrong .option-label {
+            background: var(--danger);
+            color: white;
+        }
+
+        .feedback-box {
+            margin-top: 14px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.94rem;
+            display: none;
+            animation: fadeIn 0.22s ease-in-out;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+            color: #166534;
+        }
+
+        .feedback-box.wrong {
+            background: #fef2f2;
+            border-left: 4px solid var(--danger);
+            color: #991b1b;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-bar {
+            text-align: center;
+            margin: 24px 0;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 13px 26px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .teacher-unlock {
+            position: fixed;
+            bottom: 14px;
+            right: 14px;
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 8px 13px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            opacity: 0.88;
+            z-index: 200;
+        }
+
+        .teacher-unlock:hover {
+            opacity: 1;
+        }
+
+        .toast {
+            position: fixed;
+            top: 82px;
+            right: 20px;
+            background: #0f172a;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            display: none;
+            z-index: 300;
+            max-width: 360px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>⚙️ VẬT LÍ 10 - BÀI 24: CÔNG SUẤT & HIỆU SUẤT</h1>
+    <p>Hoàn thành đúng 12/12 câu Cấp độ 1 đủ 3 lần để mở khóa Cấp độ 2 và Cấp độ 3!</p>
+</header>
+
+<div class="top-controls">
+    <div class="level-tabs">
+        <button class="level-btn active" id="tab-1" onclick="switchLevel(1)">
+            📘 Cấp độ 1: Nhận biết (12 câu)
+        </button>
+        <button class="level-btn locked" id="tab-2" onclick="switchLevel(2)">
+            🔒 Cấp độ 2: 7-8 điểm (5 câu)
+        </button>
+        <button class="level-btn locked" id="tab-3" onclick="switchLevel(3)">
+            🔒 Cấp độ 3: 9-10 điểm (5 câu)
+        </button>
+    </div>
+    <button class="sound-btn" id="sound-toggle" onclick="toggleSound()">
+        🔊 Âm thanh: Bật
+    </button>
+</div>
+
+<div class="status-banner">
+    <div class="status-card">
+        <div class="stars-box">
+            <span>Tích lũy Cấp 1 (đúng 12/12):</span>
+            <span class="star" id="star-1">★</span>
+            <span class="star" id="star-2">★</span>
+            <span class="star" id="star-3">★</span>
+            <span id="pass-text">(0/3 lần)</span>
+        </div>
+        <div class="score-counter" id="score-display">
+            Đúng: 0 / 12 câu
+        </div>
+    </div>
+</div>
+
+<div class="container" id="quiz-container"></div>
+
+<div class="action-bar">
+    <button class="btn-primary" onclick="restartCurrentLevel()">🔄 Đảo câu hỏi & Làm lại cấp độ này</button>
+</div>
+
+<button class="teacher-unlock" onclick="teacherUnlockAll()">🔑 Chế độ GV: Mở khóa nhanh</button>
+<div class="toast" id="toast-msg"></div>
+
+<script>
+    // ==================== HỆ THỐNG ÂM THANH VUI NHỘN & BẤT NGỜ (WEB AUDIO API) ====================
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        document.getElementById('sound-toggle').innerHTML = soundEnabled ? '🔊 Âm thanh: Bật' : '🔇 Âm thanh: Tắt';
+    }
+
+    function playFunnySound(isCorrect) {
+        if (!soundEnabled) return;
+        initAudio();
+        const now = audioCtx.currentTime;
+
+        if (isCorrect) {
+            // 3 hiệu ứng âm thanh ĐÚNG vui nhộn, bất ngờ
+            const mode = Math.floor(Math.random() * 3);
+            if (mode === 0) {
+                // Kiểu 1: Chuông thưởng liên hoàn (Victory Chime)
+                const freqs = [523.25, 659.25, 783.99, 1046.5, 1318.5];
+                freqs.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now + idx * 0.055);
+                    gain.gain.setValueAtTime(0.22, now + idx * 0.055);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.055 + 0.18);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.055);
+                    osc.stop(now + idx * 0.055 + 0.18);
+                });
+            } else if (mode === 1) {
+                // Kiểu 2: Còi trượt vút lên bất ngờ (Funny Slide Up + Ding)
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(320, now);
+                osc.frequency.exponentialRampToValueAtTime(1400, now + 0.25);
+                gain.gain.setValueAtTime(0.24, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else {
+                // Kiểu 3: Kèn Fanfare 8-bit vui nhộn
+                const notes = [587.33, 587.33, 587.33, 783.99, 987.77];
+                const starts = [0, 0.07, 0.14, 0.21, 0.33];
+                const lens = [0.05, 0.05, 0.05, 0.1, 0.25];
+                notes.forEach((f, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(f, now + starts[i]);
+                    gain.gain.setValueAtTime(0.12, now + starts[i]);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + starts[i] + lens[i]);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + starts[i]);
+                    osc.stop(now + starts[i] + lens[i]);
+                });
+            }
+        } else {
+            // 2 hiệu ứng âm thanh SAI hài hước ("Ò e í e" / "Tụt dây cót")
+            const mode = Math.floor(Math.random() * 2);
+            if (mode === 0) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(280, now);
+                osc.frequency.linearRampToValueAtTime(210, now + 0.16);
+                osc.frequency.linearRampToValueAtTime(125, now + 0.4);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.44);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + 0.44);
+            } else {
+                const freqs = [260, 240, 210, 150];
+                freqs.forEach((f, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now + idx * 0.09);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.09);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.09);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + idx * 0.09);
+                    osc.stop(now + idx * 0.09 + 0.09);
+                });
+            }
+        }
+    }
+
+    // ==================== HÌNH VẼ VECTOR SVG CÓ ĐƯỜNG GIÓNG SỐ LIỆU CHÍNH XÁC ====================
+    const SVGs = {
+        craneLift: `
+        <svg width="310" height="165" viewBox="0 0 310 165">
+            <defs>
+                <marker id="arrUp" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+                <marker id="arrDown" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
+                </marker>
+            </defs>
+            <!-- Cần cẩu ngang -->
+            <line x1="60" y1="18" x2="210" y2="18" stroke="#334155" stroke-width="5"/>
+            <circle cx="150" cy="24" r="6" fill="#64748b"/>
+            <!-- Dây cáp -->
+            <line x1="150" y1="30" x2="150" y2="95" stroke="#475569" stroke-width="2"/>
+            <!-- Vật nặng -->
+            <rect x="122" y="95" width="56" height="36" rx="4" fill="#fde68a" stroke="#d97706" stroke-width="2"/>
+            <text x="135" y="118" font-size="12" font-weight="bold" fill="#92400e">m</text>
+            <!-- Vectơ lực kéo F -->
+            <line x1="150" y1="95" x2="150" y2="48" stroke="#dc2626" stroke-width="3" marker-end="url(#arrUp)"/>
+            <text x="158" y="65" font-size="13" font-weight="bold" fill="#dc2626">F&#8407;</text>
+            <!-- Vectơ trọng lực P -->
+            <line x1="150" y1="131" x2="150" y2="158" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrDown)"/>
+            <text x="158" y="155" font-size="13" font-weight="bold" fill="#2563eb">P&#8407;</text>
+            <!-- Đường gióng độ cao h -->
+            <line x1="65" y1="150" x2="260" y2="150" stroke="#334155" stroke-width="2"/>
+            <line x1="90" y1="95" x2="122" y2="95" stroke="#64748b" stroke-dasharray="3,3"/>
+            <line x1="98" y1="150" x2="98" y2="95" stroke="#16a34a" stroke-width="2"/>
+            <text x="52" y="126" font-size="12" font-weight="bold" fill="#16a34a">h = 6 m</text>
+        </svg>`,
+
+        carPower: `
+        <svg width="320" height="135" viewBox="0 0 320 135">
+            <defs>
+                <marker id="arrF" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+                <marker id="arrV" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#0284c7"/>
+                </marker>
+            </defs>
+            <line x1="15" y1="105" x2="305" y2="105" stroke="#475569" stroke-width="2.5"/>
+            <!-- Thân xe -->
+            <rect x="65" y="62" width="90" height="32" rx="6" fill="#38bdf8" stroke="#0369a1" stroke-width="2"/>
+            <polygon points="80,62 95,42 135,42 148,62" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>
+            <circle cx="85" cy="96" r="9" fill="#1e293b"/>
+            <circle cx="135" cy="96" r="9" fill="#1e293b"/>
+            <!-- Vectơ lực kéo F -->
+            <line x1="155" y1="78" x2="245" y2="78" stroke="#dc2626" stroke-width="3" marker-end="url(#arrF)"/>
+            <text x="180" y="70" font-size="13" font-weight="bold" fill="#dc2626">F&#8407;</text>
+            <!-- Vectơ vận tốc v -->
+            <line x1="155" y1="50" x2="225" y2="50" stroke="#0284c7" stroke-width="2.5" marker-end="url(#arrV)"/>
+            <text x="180" y="42" font-size="13" font-weight="bold" fill="#0284c7">v&#8407;</text>
+        </svg>`,
+
+        energySankey: `
+        <svg width="330" height="150" viewBox="0 0 330 150">
+            <defs>
+                <marker id="arrE1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#0284c7"/>
+                </marker>
+                <marker id="arrE2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#16a34a"/>
+                </marker>
+                <marker id="arrE3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+            </defs>
+            <!-- Năng lượng toàn phần -->
+            <line x1="15" y1="65" x2="105" y2="65" stroke="#0284c7" stroke-width="5" marker-end="url(#arrE1)"/>
+            <text x="15" y="48" font-size="12" font-weight="bold" fill="#0369a1">W_tp (Toàn phần)</text>
+            <!-- Động cơ -->
+            <rect x="112" y="38" width="76" height="54" rx="8" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+            <text x="122" y="69" font-size="13" font-weight="bold" fill="#0f172a">ĐỘNG CƠ</text>
+            <!-- Năng lượng có ích -->
+            <line x1="188" y1="55" x2="295" y2="55" stroke="#16a34a" stroke-width="4" marker-end="url(#arrE2)"/>
+            <text x="200" y="42" font-size="12" font-weight="bold" fill="#16a34a">W_ích (Có ích)</text>
+            <!-- Năng lượng hao phí -->
+            <polyline points="150,92 150,130 235,130" fill="none" stroke="#dc2626" stroke-width="3" marker-end="url(#arrE3)"/>
+            <text x="160" y="122" font-size="12" font-weight="bold" fill="#dc2626">W_hp (Hao phí)</text>
+        </svg>`,
+
+        graphAt: `
+        <svg width="320" height="180" viewBox="0 0 320 180">
+            <defs>
+                <marker id="axArr" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="#0f172a"/>
+                </marker>
+            </defs>
+            <!-- Hệ trục tọa độ -->
+            <line x1="50" y1="145" x2="290" y2="145" stroke="#0f172a" stroke-width="2" marker-end="url(#axArr)"/>
+            <line x1="50" y1="145" x2="50" y2="15" stroke="#0f172a" stroke-width="2" marker-end="url(#axArr)"/>
+            <text x="275" y="166" font-size="13" font-weight="bold">t (s)</text>
+            <text x="8" y="24" font-size="13" font-weight="bold">A (J)</text>
+            <text x="36" y="160" font-size="12">0</text>
+            <!-- Đường biểu diễn công A theo t -->
+            <line x1="50" y1="145" x2="220" y2="40" stroke="#0284c7" stroke-width="3"/>
+            <!-- Đường gióng tọa độ chính xác -->
+            <line x1="220" y1="40" x2="220" y2="145" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <line x1="50" y1="40" x2="220" y2="40" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <circle cx="220" cy="40" r="4" fill="#dc2626"/>
+            <text x="14" y="44" font-size="12" font-weight="bold" fill="#dc2626">600</text>
+            <text x="212" y="163" font-size="12" font-weight="bold" fill="#dc2626">12</text>
+        </svg>`,
+
+        inclineCarUp: `
+        <svg width="330" height="170" viewBox="0 0 330 170">
+            <defs>
+                <marker id="aFk" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+                </marker>
+                <marker id="aP2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                    <path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/>
+                </marker>
+            </defs>
+            <!-- Mặt phẳng nghiêng -->
+            <polygon points="35,145 285,145 285,45" fill="#e2e8f0" stroke="#334155" stroke-width="2"/>
+            <!-- Góc alpha -->
+            <path d="M 85 145 A 50 50 0 0 0 82 126" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="92" y="138" font-size="12" font-weight="bold">α</text>
+            <!-- Vật chuyển động lên dốc -->
+            <g transform="translate(150, 99) rotate(-21.8)">
+                <rect x="-25" y="-24" width="50" height="24" rx="4" fill="#38bdf8" stroke="#0369a1" stroke-width="2"/>
+                <line x1="25" y1="-12" x2="75" y2="-12" stroke="#dc2626" stroke-width="2.5" marker-end="url(#aFk)"/>
+                <text x="45" y="-18" font-size="12" font-weight="bold" fill="#dc2626">F&#8407;_k</text>
+            </g>
+            <!-- Trọng lực P thẳng đứng -->
+            <line x1="145" y1="88" x2="145" y2="140" stroke="#2563eb" stroke-width="2.5" marker-end="url(#aP2)"/>
+            <text x="152" y="134" font-size="12" font-weight="bold" fill="#2563eb">P&#8407;</text>
+            <!-- Đường gióng độ cao -->
+            <line x1="285" y1="45" x2="310" y2="45" stroke="#64748b" stroke-dasharray="3,3"/>
+            <text x="292" y="98" font-size="12" font-weight="bold" fill="#0369a1">h</text>
+        </svg>`,
+
+        graphVtLevel3: `
+        <svg width="330" height="185" viewBox="0 0 330 185">
+            <defs>
+                <marker id="ax3" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+                    <path d="M0,0 L7,3.5 L0,7 Z" fill="#0f172a"/>
+                </marker>
+            </defs>
+            <!-- Hệ trục v - t -->
+            <line x1="50" y1="150" x2="295" y2="150" stroke="#0f172a" stroke-width="2" marker-end="url(#ax3)"/>
+            <line x1="50" y1="150" x2="50" y2="15" stroke="#0f172a" stroke-width="2" marker-end="url(#ax3)"/>
+            <text x="280" y="170" font-size="13" font-weight="bold">t (s)</text>
+            <text x="6" y="24" font-size="13" font-weight="bold">v (m/s)</text>
+            <text x="35" y="165" font-size="12">0</text>
+            <!-- Đồ thị vận tốc -->
+            <polyline points="50,150 160,45 260,45" fill="none" stroke="#16a34a" stroke-width="3"/>
+            <!-- Đường gióng -->
+            <line x1="160" y1="45" x2="160" y2="150" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <line x1="50" y1="45" x2="160" y2="45" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <circle cx="160" cy="45" r="4" fill="#dc2626"/>
+            <text x="22" y="50" font-size="12" font-weight="bold" fill="#dc2626">10</text>
+            <text x="155" y="167" font-size="12" font-weight="bold" fill="#dc2626">5</text>
+        </svg>`
+    };
+
+    // ==================== NGÂN HÀNG 22 CÂU HỎI BÁM SÁT BÀI 24 (12 CẤP 1 + 5 CẤP 2 + 5 CẤP 3) ====================
+    const QUESTION_BANK = {
+        1: [
+            {
+                id: "B24_L1_1",
+                topic: "Khái niệm Công suất",
+                question: "Trong Vật lí, **công suất** là đại lượng được xác định bằng:",
+                svg: null,
+                options: [
+                    "Công thực hiện được trong một đơn vị thời gian.",
+                    "Tổng công cơ học mà lực thực hiện trên cả quãng đường.",
+                    "Tích của công cơ học và thời gian thực hiện công.",
+                    "Quãng đường vật đi được trong một đơn vị thời gian."
+                ],
+                correctIndex: 0,
+                explanation: "Công suất đặc trưng cho tốc độ sinh công nhanh hay chậm và được đo bằng **công thực hiện được trong một đơn vị thời gian** ($\\mathcal{P} = \\dfrac{A}{t}$)."
+            },
+            {
+                id: "B24_L1_2",
+                topic: "Công thức Công suất",
+                question: "Nếu trong thời gian $t$, lực thực hiện được một công cơ học là $A$ thì công suất trung bình $\\mathcal{P}$ được tính theo công thức nào?",
+                svg: null,
+                options: [
+                    "$\\mathcal{P} = \\dfrac{A}{t}$",
+                    "$\\mathcal{P} = A \\cdot t$",
+                    "$\\mathcal{P} = \\dfrac{t}{A}$",
+                    "$\\mathcal{P} = A \\cdot t^2$"
+                ],
+                correctIndex: 0,
+                explanation: "Công thức định nghĩa công suất là $\\mathcal{P} = \\dfrac{A}{t}$, với $A$ là công thực hiện ($\\text{J}$) và $t$ là thời gian thực hiện công ($\\text{s}$)."
+            },
+            {
+                id: "B24_L1_3",
+                topic: "Đơn vị Công suất",
+                question: "Trong hệ đơn vị SI, đơn vị của **công suất** là:",
+                svg: null,
+                options: [
+                    "Oát ($\\text{W}$), với $1\\text{ W} = 1\\text{ J/s}$.",
+                    "Jun ($\\text{J}$), với $1\\text{ J} = 1\\text{ N}\\cdot\\text{m}$.",
+                    "Niutơn ($\\text{N}$), với $1\\text{ N} = 1\\text{ kg}\\cdot\\text{m/s}^2$.",
+                    "Kilôoát giờ ($\\text{kWh}$)."
+                ],
+                correctIndex: 0,
+                explanation: "Đơn vị công suất trong hệ SI là Oát (kí hiệu $\\text{W}$): $1\\text{ W} = \\dfrac{1\\text{ J}}{1\\text{ s}} = 1\\text{ J/s}$. Lưu ý $\\text{kWh}$ là đơn vị của điện năng (công)."
+            },
+            {
+                id: "B24_L1_4",
+                topic: "Đơn vị Mã lực (HP) thực tế",
+                question: "Trong kĩ thuật, công suất của các động cơ còn được tính theo đơn vị **mã lực (HP - Horse Power)**. Ở nước Pháp, $1\\text{ HP}$ quy đổi ra đơn vị Oát ($\\text{W}$) có giá trị bằng:",
+                svg: null,
+                options: [
+                    "$1\\text{ HP} = 736\\text{ W}$",
+                    "$1\\text{ HP} = 1000\\text{ W}$",
+                    "$1\\text{ HP} = 100\\text{ W}$",
+                    "$1\\text{ HP} = 3600\\text{ W}$"
+                ],
+                correctIndex: 0,
+                explanation: "Theo quy ước mã lực hệ mét (Pháp) được nêu trong bài học: $1\\text{ CV (HP)} = 736\\text{ W} = 0{,}736\\text{ kW}$ (ở hệ Anh $1\\text{ HP} \\approx 746\\text{ W}$)."
+            },
+            {
+                id: "B24_L1_5",
+                topic: "Liên hệ giữa Công suất, Lực và Vận tốc",
+                question: "Khi lực không đổi $\\vec{F}$ tác dụng lên vật cùng hướng với vận tốc $\\vec{v}$ của vật, biểu thức liên hệ giữa công suất $\\mathcal{P}$, độ lớn lực $F$ và tốc độ $v$ là:",
+                svg: SVGs.carPower,
+                options: [
+                    "$\\mathcal{P} = F \\cdot v$",
+                    "$\\mathcal{P} = \\dfrac{F}{v}$",
+                    "$\\mathcal{P} = \\dfrac{v}{F}$",
+                    "$\\mathcal{P} = F \\cdot v^2$"
+                ],
+                correctIndex: 0,
+                explanation: "Ta có $\\mathcal{P} = \\dfrac{A}{t} = \\dfrac{F \\cdot s}{t} = F \\cdot v$. Công thức này giúp giải thích tại sao xe lên dốc cần giảm tốc độ $v$ để tăng lực kéo $F$."
+            },
+            {
+                id: "B24_L1_6",
+                topic: "Công thức Hiệu suất",
+                question: "Gọi $W_{\\text{ích}}$ (hoặc $A'$) là năng lượng có ích và $W_{\\text{tp}}$ (hoặc $A$) là năng lượng toàn phần cung cấp cho động cơ. Công thức tính **hiệu suất** $H$ của động cơ là:",
+                svg: SVGs.energySankey,
+                options: [
+                    "$H = \\dfrac{W_{\\text{ích}}}{W_{\\text{tp}}} \\cdot 100\\%$",
+                    "$H = \\dfrac{W_{\\text{tp}}}{W_{\\text{ích}}} \\cdot 100\\%$",
+                    "$H = (W_{\\text{tp}} - W_{\\text{ích}}) \\cdot 100\\%$",
+                    "$H = \\dfrac{W_{\\text{hp}}}{W_{\\text{ích}}} \\cdot 100\\%$"
+                ],
+                correctIndex: 0,
+                explanation: "Hiệu suất của động cơ bằng tỉ số giữa năng lượng có ích (hoặc công suất có ích) và năng lượng toàn phần (hoặc công suất toàn phần): $H = \\dfrac{W_{\\text{ích}}}{W_{\\text{tp}}} \\cdot 100\\%$."
+            },
+            {
+                id: "B24_L1_7",
+                topic: "Đặc điểm của Hiệu suất thực tế",
+                question: "Đối với mọi máy móc và động cơ trong thực tế, do luôn có sự hao phí năng lượng (như ma sát, tỏa nhiệt) nên giá trị hiệu suất $H$ luôn thỏa mãn:",
+                svg: null,
+                options: [
+                    "$H < 100\\%$ (hay $H < 1$)",
+                    "$H > 100\\%$ (hay $H > 1$)",
+                    "$H = 100\\%$",
+                    "$H \\ge 100\\%$"
+                ],
+                correctIndex: 0,
+                explanation: "Vì luôn tồn tại năng lượng hao phí ($W_{\\text{hp}} > 0$) nên $W_{\\text{ích}} = W_{\\text{tp}} - W_{\\text{hp}} < W_{\\text{tp}}$, suy ra hiệu suất thực tế luôn nhỏ hơn $100\\%$."
+            },
+            {
+                id: "B24_L1_8",
+                topic: "Phép tính 1 bước - Tính Công suất từ A và t",
+                question: "Một máy cơ học thực hiện được một công $A = 1200\\text{ J}$ trong khoảng thời gian $t = 30\\text{ s}$. Công suất trung bình của máy là:",
+                svg: null,
+                options: [
+                    "$40\\text{ W}$",
+                    "$36\\,000\\text{ W}$",
+                    "$400\\text{ W}$",
+                    "$1230\\text{ W}$"
+                ],
+                correctIndex: 0,
+                explanation: "Áp dụng công thức $\\mathcal{P} = \\dfrac{A}{t} = \\dfrac{1200}{30} = 40\\text{ W}$."
+            },
+            {
+                id: "B24_L1_9",
+                topic: "Phép tính 1 bước - Tính Công từ P và t",
+                question: "Một bóng đèn sợi đốt có công suất $\\mathcal{P} = 100\\text{ W}$ hoạt động liên tục trong thời gian $t = 20\\text{ s}$. Điện năng mà bóng đèn tiêu thụ trong thời gian đó là:",
+                svg: null,
+                options: [
+                    "$2000\\text{ J}$",
+                    "$5\\text{ J}$",
+                    "$120\\text{ J}$",
+                    "$200\\text{ J}$"
+                ],
+                correctIndex: 0,
+                explanation: "Năng lượng (công của dòng điện) tiêu thụ là $A = \\mathcal{P} \\cdot t = 100 \\cdot 20 = 2000\\text{ J}$."
+            },
+            {
+                id: "B24_L1_10",
+                topic: "Phép tính 1 bước - Tính Công suất P = F.v",
+                question: "Một ô tô chuyển động thẳng đều trên đường ngang với tốc độ $v = 15\\text{ m/s}$ dưới tác dụng của lực kéo động cơ không đổi $F = 2000\\text{ N}$ cùng hướng chuyển động. Công suất của động cơ ô tô là:",
+                svg: SVGs.carPower,
+                options: [
+                    "$30\\text{ kW}$",
+                    "$300\\text{ W}$",
+                    "$133{,}3\\text{ W}$",
+                    "$15\\text{ kW}$"
+                ],
+                correctIndex: 0,
+                explanation: "Ta có $\\mathcal{P} = F \\cdot v = 2000 \\cdot 15 = 30\\,000\\text{ W} = 30\\text{ kW}$."
+            },
+            {
+                id: "B24_L1_11",
+                topic: "Phép tính 1 bước - Tính Hiệu suất",
+                question: "Một động cơ điện được cung cấp năng lượng toàn phần là $W_{\\text{tp}} = 500\\text{ J}$, trong đó phần năng lượng chuyển hóa thành cơ năng có ích là $W_{\\text{ích}} = 400\\text{ J}$. Hiệu suất của động cơ là:",
+                svg: SVGs.energySankey,
+                options: [
+                    "$80\\%$",
+                    "$20\\%$",
+                    "$125\\%$",
+                    "$90\\%$"
+                ],
+                correctIndex: 0,
+                explanation: "Áp dụng công thức hiệu suất: $H = \\dfrac{W_{\\text{ích}}}{W_{\\text{tp}}} \\cdot 100\\% = \\dfrac{400}{500} \\cdot 100\\% = 80\\%$."
+            },
+            {
+                id: "B24_L1_12",
+                topic: "Đọc đồ thị Công - Thời gian (A - t)",
+                question: "Đồ thị hình bên biểu diễn sự phụ thuộc của công cơ học $A$ vào thời gian $t$ của một máy kéo. Dựa vào đường gióng số liệu trên đồ thị, công suất của máy kéo là:",
+                svg: SVGs.graphAt,
+                options: [
+                    "$50\\text{ W}$",
+                    "$7200\\text{ W}$",
+                    "$600\\text{ W}$",
+                    "$12\\text{ W}$"
+                ],
+                correctIndex: 0,
+                explanation: "Từ đường gióng trên đồ thị, tại $t = 12\\text{ s}$ thì công thực hiện là $A = 600\\text{ J}$. Suy ra công suất $\\mathcal{P} = \\dfrac{A}{t} = \\dfrac{600}{12} = 50\\text{ W}$."
+            }
+        ],
+        2: [
+            {
+                id: "B24_L2_1",
+                topic: "Công suất nâng vật đều (Mức 7-8 điểm)",
+                question: "Một cần cẩu nâng đều một kiện hàng có khối lượng $m = 500\\text{ kg}$ lên cao $h = 6\\text{ m}$ trong khoảng thời gian $t = 10\\text{ s}$. Lấy $g = 9{,}8\\text{ m/s}^2$. Công suất trung bình của lực nâng cần cẩu là:",
+                svg: SVGs.craneLift,
+                options: [
+                    "$2{,}94\\text{ kW}$",
+                    "$3{,}00\\text{ kW}$",
+                    "$29{,}4\\text{ kW}$",
+                    "$0{,}49\\text{ kW}$"
+                ],
+                correctIndex: 0,
+                explanation: "Vì nâng đều nên lực nâng bằng trọng lượng vật: $F = P = mg = 500 \\cdot 9{,}8 = 4900\\text{ N}$. Công thực hiện: $A = F \\cdot h = 4900 \\cdot 6 = 29\\,400\\text{ J}$. Công suất: $\\mathcal{P} = \\dfrac{A}{t} = \\dfrac{29\\,400}{10} = 2940\\text{ W} = 2{,}94\\text{ kW}$."
+            },
+            {
+                id: "B24_L2_2",
+                topic: "Tìm lực kéo từ Công suất và Vận tốc km/h",
+                question: "Một đầu máy xe lửa có công suất không đổi $\\mathcal{P} = 1000\\text{ kW}$ kéo đoàn tàu chuyển động thẳng đều với tốc độ $v = 72\\text{ km/h}$ trên đường sắt nằm ngang. Độ lớn lực kéo của đầu máy xe lửa là:",
+                svg: SVGs.carPower,
+                options: [
+                    "$50\\,000\\text{ N}$",
+                    "$13\\,889\\text{ N}$",
+                    "$72\\,000\\text{ N}$",
+                    "$20\\,000\\text{ N}$"
+                ],
+                correctIndex: 0,
+                explanation: "Đổi đơn vị: $\\mathcal{P} = 1000\\text{ kW} = 10^6\\text{ W}$; $v = 72\\text{ km/h} = 20\\text{ m/s}$. Từ công thức $\\mathcal{P} = F \\cdot v \\Rightarrow F = \\dfrac{\\mathcal{P}}{v} = \\dfrac{10^6}{20} = 50\\,000\\text{ N}$."
+            },
+            {
+                id: "B24_L2_3",
+                topic: "Tính hiệu suất có hao phí năng lượng",
+                question: "Một máy bơm nước mỗi giây nhận được năng lượng toàn phần từ dòng điện là $2500\\text{ J}$, nhưng do ma sát và tỏa nhiệt nên mỗi giây máy bị hao phí mất $W_{\\text{hp}} = 500\\text{ J}$. Hiệu suất của máy bơm nước này là:",
+                svg: SVGs.energySankey,
+                options: [
+                    "$80\\%$",
+                    "$20\\%$",
+                    "$75\\%$",
+                    "$85\\%$"
+                ],
+                correctIndex: 0,
+                explanation: "Năng lượng có ích trong mỗi giây là: $W_{\\text{ích}} = W_{\\text{tp}} - W_{\\text{hp}} = 2500 - 500 = 2000\\text{ J}$. Hiệu suất của máy bơm: $H = \\dfrac{W_{\\text{ích}}}{W_{\\text{tp}}} \\cdot 100\\% = \\dfrac{2000}{2500} \\cdot 100\\% = 80\\%$."
+            },
+            {
+                id: "B24_L2_4",
+                topic: "Bài toán thực tế kết hợp Hiệu suất và Thời gian",
+                question: "Một động cơ điện có công suất tiêu thụ toàn phần là $\\mathcal{P}_{\\text{tp}} = 2\\text{ kW}$ và hiệu suất $H = 75\\%$ được dùng để nâng đều một thùng hàng nặng $m = 300\\text{ kg}$ lên độ cao $h = 10\\text{ m}$. Lấy $g = 10\\text{ m/s}^2$. Thời gian để nâng kiện hàng lên là:",
+                svg: SVGs.craneLift,
+                options: [
+                    "$20\\text{ s}$",
+                    "$15\\text{ s}$",
+                    "$11{,}25\\text{ s}$",
+                    "$30\\text{ s}$"
+                ],
+                correctIndex: 0,
+                explanation: "Công suất có ích của động cơ: $\\mathcal{P}_{\\text{ích}} = H \\cdot \\mathcal{P}_{\\text{tp}} = 0{,}75 \\cdot 2000 = 1500\\text{ W}$. Công có ích cần thực hiện để nâng vật: $A_{\\text{ích}} = mgh = 300 \\cdot 10 \\cdot 10 = 30\\,000\\text{ J}$. Thời gian nâng vật: $t = \\dfrac{A_{\\text{ích}}}{\\mathcal{P}_{\\text{ích}}} = \\dfrac{30\\,000}{1500} = 20\\text{ s}$."
+            },
+            {
+                id: "B24_L2_5",
+                topic: "Công suất khi lực hợp góc α với vận tốc",
+                question: "Một người kéo một thùng hàng chuyển động thẳng đều trên sàn ngang với tốc độ $v = 2\\text{ m/s}$ bằng một sợi dây chịu lực căng $F = 120\\text{ N}$ hợp với phương ngang một góc $\\theta = 60^\\circ$. Công suất của lực kéo là:",
+                svg: null,
+                options: [
+                    "$120\\text{ W}$",
+                    "$240\\text{ W}$",
+                    "$120\\sqrt{3}\\text{ W}$",
+                    "$60\\text{ W}$"
+                ],
+                correctIndex: 0,
+                explanation: "Khi lực $\\vec{F}$ hợp với vectơ vận tốc $\\vec{v}$ góc $\\theta$: $\\mathcal{P} = \\dfrac{A}{t} = \\dfrac{F \\cdot s \\cdot \\cos\\theta}{t} = F \\cdot v \\cdot \\cos\\theta = 120 \\cdot 2 \\cdot \\cos 60^\\circ = 120\\text{ W}$."
+            }
+        ],
+        3: [
+            {
+                id: "B24_L3_1",
+                topic: "Phân biệt Công suất trung bình và Công suất tức thời (Mức 9-10 điểm)",
+                question: "Một vật khối lượng $m = 200\\text{ kg}$ bắt đầu chuyển động nhanh dần đều từ trạng thái nghỉ trên mặt sàn ngang dưới tác dụng của lực kéo không đổi, có đồ thị vận tốc - thời gian ($v - t$) trong $5\\text{ s}$ đầu như hình vẽ. Biết lực ma sát luôn bằng $400\\text{ N}$. Tỉ số giữa **công suất tức thời** tại $t = 5\\text{ s}$ và **công suất trung bình** trong $5\\text{ s}$ đầu của lực kéo là:",
+                svg: SVGs.graphVtLevel3,
+                options: [
+                    "$2$",
+                    "$1{,}5$",
+                    "$1$",
+                    "$4$"
+                ],
+                correctIndex: 0,
+                explanation: "Trong chuyển động thẳng nhanh dần đều không vận tốc đầu dưới tác dụng của lực kéo $F$ không đổi: vận tốc tức thời ở cuối giai đoạn là $v = at$, còn vận tốc trung bình là $v_{\\text{tb}} = \\dfrac{s}{t} = \\dfrac{\\frac{1}{2}at^2}{t} = \\dfrac{v}{2}$. Vì $\\mathcal{P}_t = F \\cdot v$ và $\\mathcal{P}_{\\text{tb}} = F \\cdot v_{\\text{tb}}$, nên tỉ số $\\dfrac{\\mathcal{P}_t}{\\mathcal{P}_{\\text{tb}}} = \\dfrac{v}{v/2} = 2$. (Cụ thể: $a = 2\\text{ m/s}^2 \\Rightarrow F = F_{\\text{ms}} + ma = 800\\text{ N} \\Rightarrow \\mathcal{P}_t = 8000\\text{ W}, \\mathcal{P}_{\\text{tb}} = 4000\\text{ W}$)."
+            },
+            {
+                id: "B24_L3_2",
+                topic: "Công suất ô tô lên dốc có ma sát",
+                question: "Một ô tô khối lượng $m = 1{,}5\\text{ tấn} = 1500\\text{ kg}$ chuyển động **thẳng đều** lên một dốc nghiêng có $\\sin\\alpha = 0{,}06$ (và $\\cos\\alpha \\approx 1$) với tốc độ $v = 54\\text{ km/h}$. Hệ số ma sát toàn phần trên mặt dốc là $\\mu = 0{,}04$, lấy $g = 10\\text{ m/s}^2$. Công suất của động cơ ô tô khi lên dốc là:",
+                svg: SVGs.inclineCarUp,
+                options: [
+                    "$22{,}5\\text{ kW}$",
+                    "$13{,}5\\text{ kW}$",
+                    "$9{,}0\\text{ kW}$",
+                    "$45{,}0\\text{ kW}$"
+                ],
+                correctIndex: 0,
+                explanation: "Đổi $v = 54\\text{ km/h} = 15\\text{ m/s}$. Vì xe lên dốc thẳng đều nên lực kéo cân bằng với thành phần trọng lực dọc dốc và lực ma sát: $F_k = mg\\sin\\alpha + \\mu mg\\cos\\alpha = 1500 \\cdot 10 \\cdot (0{,}06 + 0{,}04) = 1500\\text{ N}$. Công suất động cơ: $\\mathcal{P} = F_k \\cdot v = 1500 \\cdot 15 = 22\\,500\\text{ W} = 22{,}5\\text{ kW}$."
+            },
+            {
+                id: "B24_L3_3",
+                topic: "Bài toán không đổi Công suất khi lên dốc và chạy ngang",
+                question: "Một ô tô chạy thẳng đều trên đường nằm ngang với tốc độ $v_1 = 72\\text{ km/h}$ khi động cơ phát ra công suất cực đại. Biết lực cản trên đường luôn bằng $0{,}05$ lần trọng lượng xe ($F_c = 0{,}05P$). Nếu xe giữ nguyên công suất cực đại đó để leo đều lên một dốc có $\\sin\\alpha = 0{,}05$ (với lực cản không đổi) thì tốc độ tối đa $v_2$ của xe trên dốc là:",
+                svg: SVGs.inclineCarUp,
+                options: [
+                    "$36\\text{ km/h}$",
+                    "$54\\text{ km/h}$",
+                    "$48\\text{ km/h}$",
+                    "$24\\text{ km/h}$"
+                ],
+                correctIndex: 0,
+                explanation: "Trên đường ngang: $F_1 = F_c = 0{,}05P$. Khi lên dốc đều: $F_2 = F_c + P\\sin\\alpha = 0{,}05P + 0{,}05P = 0{,}10P = 2F_1$. Vì công suất cực đại không đổi: $\\mathcal{P}_{\\max} = F_1 v_1 = F_2 v_2 \\Rightarrow v_2 = \\dfrac{F_1}{F_2}v_1 = \\dfrac{72}{2} = 36\\text{ km/h}$."
+            },
+            {
+                id: "B24_L3_4",
+                topic: "Hiệu suất kéo vật trên mặt phẳng nghiêng có ma sát",
+                question: "Dùng một tời điện để kéo đều một thùng hàng khối lượng $m = 100\\text{ kg}$ trượt lên mặt phẳng nghiêng góc $\\alpha = 30^\\circ$ bằng lực kéo song song với mặt dốc. Biết hệ số ma sát trượt giữa thùng và mặt dốc là $\\mu = \\dfrac{1}{4\\sqrt{3}}$, lấy $g = 10\\text{ m/s}^2$. Hiệu suất của mặt phẳng nghiêng này là:",
+                svg: SVGs.inclineCarUp,
+                options: [
+                    "$80\\%$",
+                    "$75\\%$",
+                    "$85\\%$",
+                    "$60\\%$"
+                ],
+                correctIndex: 0,
+                explanation: "Trên chiều dài dốc $s$: Công có ích nâng vật lên cao là $A_{\\text{ích}} = P \\cdot h = mg s \\sin 30^\\circ = 0{,}5 mgs$. Công của lực ma sát hao phí: $A_{\\text{hp}} = \\mu mg\\cos 30^\\circ \\cdot s = \\dfrac{1}{4\\sqrt{3}} \\cdot \\dfrac{\\sqrt{3}}{2} mgs = 0{,}125 mgs$. Công toàn phần: $A_{\\text{tp}} = A_{\\text{ích}} + A_{\\text{hp}} = 0{,}625 mgs$. Hiệu suất: $H = \\dfrac{0{,}5}{0{,}625} \\cdot 100\\% = 80\\%$."
+            },
+            {
+                id: "B24_L3_5",
+                topic: "Bài toán thực tế Nhà máy thủy điện & Hiệu suất",
+                question: "Tại một trạm thủy điện nhỏ, nước từ hồ chứa ở độ cao $h = 25\\text{ m}$ đổ xuống làm quay tuabin máy phát điện với lưu lượng $Q = 120\\text{ m}^3/\\text{phút}$. Biết khối lượng riêng của nước là $\\rho = 1000\\text{ kg/m}^3$, gia tốc trọng trường $g = 10\\text{ m/s}^2$ và hiệu suất phát điện đạt $H = 80\\%$. Công suất điện có ích mà trạm phát ra là:",
+                svg: SVGs.energySankey,
+                options: [
+                    "$400\\text{ kW}$",
+                    "$500\\text{ kW}$",
+                    "$300\\text{ kW}$",
+                    "$24\\,000\\text{ kW}$"
+                ],
+                correctIndex: 0,
+                explanation: "Trong mỗi giây ($t = 1\\text{ s}$), thể tích nước đổ xuống là $V = \\dfrac{120}{60} = 2\\text{ m}^3$, ứng với khối lượng nước $m = \\rho V = 2000\\text{ kg}$. Công suất toàn phần của dòng nước: $\\mathcal{P}_{\\text{tp}} = \\dfrac{mgh}{t} = 2000 \\cdot 10 \\cdot 25 = 500\\,000\\text{ W} = 500\\text{ kW}$. Công suất điện có ích: $\\mathcal{P}_{\\text{ích}} = H \\cdot \\mathcal{P}_{\\text{tp}} = 0{,}8 \\cdot 500 = 400\\text{ kW}$."
+            }
+        ]
+    };
+
+    // ==================== QUẢN LÝ TRẠNG THÁI, TRỘN ĐỀ & KIỂM SOÁT MỞ KHÓA ====================
+    let currentLevel = 1;
+    let level1PerfectCount = 0;
+    let unlockedLevels = { 1: true, 2: false, 3: false };
+    let activeQuestions = [];
+    let answeredMap = {};
+    let correctCount = 0;
+
+    function shuffleArray(arr) {
+        const copy = [...arr];
+        for (let i = copy.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast-msg');
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        clearTimeout(window._toastTimer);
+        window._toastTimer = setTimeout(() => {
+            toast.style.display = 'none';
+        }, 3500);
+    }
+
+    function updateProgressUI() {
+        for (let i = 1; i <= 3; i++) {
+            const starEl = document.getElementById(`star-${i}`);
+            if (i <= level1PerfectCount) {
+                starEl.classList.add('earned');
+            } else {
+                starEl.classList.remove('earned');
+            }
+        }
+        document.getElementById('pass-text').textContent = `(${level1PerfectCount}/3 lần)`;
+
+        const tab2 = document.getElementById('tab-2');
+        const tab3 = document.getElementById('tab-3');
+
+        if (unlockedLevels[2]) {
+            tab2.classList.remove('locked');
+            tab2.innerHTML = '📗 Cấp độ 2: 7-8 điểm (5 câu)';
+        }
+        if (unlockedLevels[3]) {
+            tab3.classList.remove('locked');
+            tab3.innerHTML = '📕 Cấp độ 3: 9-10 điểm (5 câu)';
+        }
+
+        const total = activeQuestions.length;
+        document.getElementById('score-display').textContent = `Đúng: ${correctCount} / ${total} câu`;
+    }
+
+    function switchLevel(lvl) {
+        if (!unlockedLevels[lvl]) {
+            playFunnySound(false);
+            showToast(`🔒 Học sinh cần làm đúng 12/12 câu Cấp độ 1 đủ 3 lần (hiện tại: ${level1PerfectCount}/3) mới được mở khóa!`);
+            return;
+        }
+        currentLevel = lvl;
+        document.querySelectorAll('.level-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', idx + 1 === lvl);
+        });
+        loadLevelQuestions(lvl);
+    }
+
+    function restartCurrentLevel() {
+        loadLevelQuestions(currentLevel);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('🔄 Đã trộn ngẫu nhiên thứ tự câu hỏi và vị trí các đáp án!');
+    }
+
+    function teacherUnlockAll() {
+        level1PerfectCount = 3;
+        unlockedLevels[2] = true;
+        unlockedLevels[3] = true;
+        updateProgressUI();
+        showToast('🔓 Đã mở khóa tất cả các cấp độ (Chế độ Giáo viên)!');
+    }
+
+    function loadLevelQuestions(lvl) {
+        answeredMap = {};
+        correctCount = 0;
+
+        const rawList = QUESTION_BANK[lvl];
+        activeQuestions = shuffleArray(rawList).map(q => {
+            const optionObjects = q.options.map((text, idx) => ({
+                text,
+                isCorrect: idx === q.correctIndex
+            }));
+            return {
+                ...q,
+                shuffledOptions: shuffleArray(optionObjects)
+            };
+        });
+
+        renderQuestions();
+        updateProgressUI();
+    }
+
+    function renderQuestions() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+        const labels = ['A', 'B', 'C', 'D'];
+
+        activeQuestions.forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+
+            const svgHTML = q.svg ? `<div class="svg-container">${q.svg}</div>` : '';
+            const optionsHTML = q.shuffledOptions.map((opt, optIdx) => `
+                <button class="option-btn" id="btn-${qIndex}-${optIdx}" onclick="selectOption(${qIndex}, ${optIdx})">
+                    <span class="option-label">${labels[optIdx]}</span>
+                    <span class="option-content">${opt.text}</span>
+                </button>
+            `).join('');
+
+            card.innerHTML = `
+                <div class="question-header">
+                    <span class="q-badge">Câu ${qIndex + 1} / ${activeQuestions.length}</span>
+                    <span class="q-topic">${q.topic}</span>
+                </div>
+                <div class="q-text">${q.question}</div>
+                ${svgHTML}
+                <div class="options-grid">
+                    ${optionsHTML}
+                </div>
+                <div class="feedback-box" id="feedback-${qIndex}"></div>
+            `;
+
+            container.appendChild(card);
+        });
+
+        if (window.renderMathInElement) {
+            renderMathInElement(container, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ],
+                throwOnError: false
+            });
+        }
+    }
+
+    function selectOption(qIndex, optIdx) {
+        if (answeredMap[qIndex] !== undefined) return;
+        answeredMap[qIndex] = optIdx;
+
+        const q = activeQuestions[qIndex];
+        const chosen = q.shuffledOptions[optIdx];
+        const isCorrect = chosen.isCorrect;
+
+        playFunnySound(isCorrect);
+
+        q.shuffledOptions.forEach((opt, idx) => {
+            const btn = document.getElementById(`btn-${qIndex}-${idx}`);
+            btn.disabled = true;
+            if (opt.isCorrect) {
+                btn.classList.add('correct');
+            } else if (idx === optIdx && !isCorrect) {
+                btn.classList.add('wrong');
+            }
+        });
+
+        const fb = document.getElementById(`feedback-${qIndex}`);
+        if (isCorrect) {
+            correctCount++;
+            fb.className = 'feedback-box show correct';
+            fb.innerHTML = `<strong>🎉 Chính xác! Quá đỉnh!</strong><br>${q.explanation}`;
+        } else {
+            fb.className = 'feedback-box show wrong';
+            fb.innerHTML = `<strong>😲 Hơi tiếc một chút! Cùng xem lại lời giải nhé:</strong><br>${q.explanation}`;
+        }
+
+        if (window.renderMathInElement) {
+            renderMathInElement(fb, {
+                delimiters: [
+                    { left: "$$", right: "$$", display: true },
+                    { left: "$", right: "$", display: false }
+                ],
+                throwOnError: false
+            });
+        }
+
+        updateProgressUI();
+        checkLevelCompletion();
+    }
+
+    function checkLevelCompletion() {
+        const total = activeQuestions.length;
+        const answeredCount = Object.keys(answeredMap).length;
+
+        if (answeredCount === total) {
+            if (currentLevel === 1) {
+                if (correctCount === total) {
+                    level1PerfectCount = Math.min(3, level1PerfectCount + 1);
+                    if (level1PerfectCount >= 3) {
+                        unlockedLevels[2] = true;
+                        unlockedLevels[3] = true;
+                        updateProgressUI();
+                        showToast('🏆 Xuất sắc! Em đã hoàn thành 12/12 câu Cấp độ 1 đủ 3 lần. Cấp độ 2 và Cấp độ 3 đã MỞ KHÓA!');
+                    } else {
+                        updateProgressUI();
+                        showToast(`🌟 Tuyệt vời (12/12)! Đã tích lũy ${level1PerfectCount}/3 lần. Hãy bấm "Đảo câu hỏi & Làm lại" thêm ${3 - level1PerfectCount} lần nữa để mở khóa Cấp 2 & 3!`);
+                    }
+                } else {
+                    showToast(`💡 Em đúng ${correctCount}/12 câu. Cần đúng tuyệt đối 12/12 câu mới được tính 1 lần qua vòng. Bấm "Đảo câu hỏi & Làm lại" để thử lại nhé!`);
+                }
+            } else {
+                showToast(`🎯 Hoàn thành Cấp độ ${currentLevel}! Kết quả: Đúng ${correctCount}/${total} câu.`);
+            }
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadLevelQuestions(1);
+        setTimeout(() => {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+        }, 300);
+    });
+</script>
+</body>
+</html>
